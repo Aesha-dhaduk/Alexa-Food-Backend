@@ -12,11 +12,11 @@ async function adduser(req,res){
 
     res.redirect('/login')
 
-    // res.json({
-    //     status:201,
-    //     message:"user created successfully",
-    //     data:Newuser
-    // })
+    res.json({
+        status:201,
+        message:"user created successfully",
+        data:Newuser
+    })
 
 }
 

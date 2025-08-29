@@ -1,6 +1,6 @@
 const UserModel = require('../models/user')
 const bcrypt = require('bcryptjs')
-// const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 async function adduser(req,res){
 
@@ -10,11 +10,13 @@ async function adduser(req,res){
         ...payload,password:hashPassword
     })
 
-    res.json({
-        status:201,
-        message:"user created successfully",
-        data:Newuser
-    })
+    res.redirect('/login')
+
+    // res.json({
+    //     status:201,
+    //     message:"user created successfully",
+    //     data:Newuser
+    // })
 
 }
 
@@ -80,17 +82,18 @@ async function login(req,res){
     if(!hashpassword){
         return res.status(400).send("password is wrong");
     }
-
+    
     const token = jwt.sign({
         id: user._id,
-    },process.env.JWT_TOKEN)
+    },process.env.JWT_SECRET)
 
     res.cookie('auth', token)
 
     res.json({
         status: 200,
         message:"login successfully !!",
-        data:user
+        data:user,
+        token
     })
 }
 

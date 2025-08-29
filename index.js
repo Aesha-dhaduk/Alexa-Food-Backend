@@ -3,7 +3,6 @@ const { default: mongoose } = require("mongoose")
 const UserRoutes = require('./routes/user')
 require('dotenv').config()
 const cookieParser = require('cookie-parser')
-const { auth } = require("./middleware/auth")
 
 
 const app = express()

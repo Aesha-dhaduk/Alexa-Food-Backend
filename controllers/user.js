@@ -81,6 +81,12 @@ async function login(req,res){
         return res.status(400).send("password is wrong");
     }
 
+    const token = jwt.sign({
+        id: user._id,
+    },process.env.JWT_TOKEN)
+
+    res.cookie('auth', token)
+
     res.json({
         status: 200,
         message:"login successfully !!",

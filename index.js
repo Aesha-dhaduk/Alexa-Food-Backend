@@ -2,13 +2,14 @@ const express = require("express")
 const { default: mongoose } = require("mongoose")
 const UserRoutes = require('./routes/user')
 require('dotenv').config()
-
-
-
+const cookieParser = require('cookie-parser')
+const { auth } = require("./middleware/auth")
 
 
 const app = express()
 app.use(express.json())
+app.use(express.urlencoded({extended: false}));//join fronted and backend
+app.use(cookieParser())
 
 
 app.use('/user', UserRoutes)

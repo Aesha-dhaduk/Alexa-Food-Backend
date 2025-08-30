@@ -2,22 +2,28 @@ const UserModel = require('../models/user')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-async function adduser(req,res){
+async function adduser(req, res) {
+    try {
+        const payload = req.body;
+        const hashPassword = await bcrypt.hash(req.body.password, 10);
 
-    const payload = req.body
-    const hashPassword = await bcrypt.hash(req.body.password, 10)
-    const Newuser = await UserModel.create({
-        ...payload,password:hashPassword
-    })
+        const Newuser = await UserModel.create({
+            ...payload,
+            password: hashPassword,
+        });
 
-    res.redirect('/login')
-
-    res.json({
-        status:201,
-        message:"user created successfully",
-        data:Newuser
-    })
-
+        res.status(201).json({
+            status: 201,
+            message: "User created successfully",
+            data: Newuser,
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            message: "Registration failed",
+            error: err.message,
+        });
+    }
 }
 
 async function alluser(req,res){

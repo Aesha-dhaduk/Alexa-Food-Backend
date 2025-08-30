@@ -1,7 +1,7 @@
 const express = require('express')
 const { adduser, alluser, singleuser, updateuser, deleteuser, login } = require('../controllers/user')
 const { auth } = require('../middleware/user')
-
+//sdsdsd
 const route = express.Router()
 
 

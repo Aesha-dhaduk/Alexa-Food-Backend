@@ -12,11 +12,11 @@ app.use(express.urlencoded({extended: false}));//join fronted and backend
 app.use(cookieParser())
 app.use(cors());
 
-app.use(cors({
-  origin: "http://localhost:3000",
-  methods: "GET,POST,PUT,DELETE",
-  credentials: true
-}));
+// app.use(cors({
+//   origin: "http://localhost:3000",
+//   methods: "GET,POST,PUT,DELETE",
+//   credentials: true
+// }));
 
 app.use('/user', UserRoutes)
 mongoose.connect(process.env.DB_CONNECTION_STRING).then(() => {

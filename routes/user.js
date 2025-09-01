@@ -5,7 +5,7 @@ const { auth } = require('../middleware/user')
 const route = express.Router()
 
 
-route.post('/register' ,auth, adduser)
+route.post('/register' , adduser)
 route.post('/login' , login)
 
 

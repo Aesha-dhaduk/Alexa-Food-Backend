@@ -11,7 +11,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended: false}));//join fronted and backend
 app.use(cookieParser())
 // app.use(cors());
-//jhyujk
+//dfsdcd
+//dfsdcd
 app.use(cors({
   origin: "http://localhost:3000",
   methods: "GET,POST,PUT,DELETE",

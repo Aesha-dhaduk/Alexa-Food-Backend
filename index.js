@@ -1,6 +1,7 @@
 const express = require("express")
 const { default: mongoose } = require("mongoose")
 const UserRoutes = require('./routes/user')
+const ProductRoutes = require('./routes/product')
 require('dotenv').config()
 const cookieParser = require('cookie-parser')
 const cors = require("cors");
@@ -15,7 +16,11 @@ app.use(cookieParser())
 //dfsdcd
 app.use(cors());
 
+
+
+
 app.use('/user', UserRoutes)
+app.use('/product', ProductRoutes)
 mongoose.connect(process.env.DB_CONNECTION_STRING).then(() => {
     console.log("DB CONNECTED SUCCESSFULLY");
 }).catch((err) => {

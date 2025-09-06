@@ -13,7 +13,7 @@ app.use(express.urlencoded({extended: false}));//join fronted and backend
 app.use(cookieParser())
 // app.use(cors());
 //dfsdcd
-//dfsdcd
+//kkk
 app.use(cors());
 
 

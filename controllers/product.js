@@ -1,101 +1,162 @@
-const ProductModel = require('../models/product');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { uploadFile } = require('../utils/upload'); // adjust path where you saved uploadFile.js
+// controllers/productController.js
+const ProductModel = require("../models/product");
+const { uploadFile } = require("../utils/upload"); // adjust path if needed
 
-// Add Product with image upload
-async function addproduct(req, res) {
+// ✅ Create Product
+const addProduct = async (req, res) => {
     try {
-        const payload = req.body;
+        const { title, price, description } = req.body;
 
-        // Check if file is uploaded
+        if (!title || !price || !description) {
+            return res.status(400).json({
+                status: 400,
+                message: "Title, price, and description are required",
+            });
+        }
+
         let imageUrl = null;
-        if (req.file) {
+        if (req.file && req.file.buffer) {
             imageUrl = await uploadFile(req.file.buffer);
         }
 
-        const Newproduct = await ProductModel.create({
-            ...payload,
-            image: imageUrl // save image URL in DB
+        const newProduct = await ProductModel.create({
+            title,
+            price,
+            description,
+            image: imageUrl,
         });
 
         res.status(201).json({
             status: 201,
             message: "Product created successfully",
-            data: Newproduct,
+            data: newProduct,
         });
     } catch (err) {
+        console.error("Error creating product:", err);
         res.status(500).json({
             status: 500,
-            message: "Product failed",
+            message: "Product creation failed",
             error: err.message,
         });
     }
-}
+};
 
-// Fetch all products
-async function allproduct(req, res) {
-    const Allproduct = await ProductModel.find();
-
-    res.json({
-        status: 200,
-        message: "All products fetched successfully",
-        data: Allproduct
-    });
-}
-
-// Fetch single product
-async function singleproduct(req, res) {
-    const { id } = req.params;
-
-    const Singleproduct = await ProductModel.findOne({ _id: id });
-
-    res.json({
-        status: 200,
-        message: "Fetched single product successfully",
-        data: Singleproduct
-    });
-}
-
-// Update product (with optional new image upload)
-async function updateproduct(req, res) {
+// ✅ Get All Products
+const getAllProducts = async (req, res) => {
     try {
-        const { id } = req.params;
-        const payload = req.body;
-
-        // If new image uploaded
-        if (req.file) {
-            const imageUrl = await uploadFile(req.file.buffer);
-            payload.image = imageUrl;
-        }
-
-        const Updateproduct = await ProductModel.findByIdAndUpdate(id, payload, { new: true });
-
-        res.json({
+        const products = await ProductModel.find().sort({ createdAt: -1 });
+        res.status(200).json({
             status: 200,
-            message: "Updated successfully",
-            data: Updateproduct
+            message: "Products fetched successfully",
+            data: products,
         });
     } catch (err) {
         res.status(500).json({
             status: 500,
-            message: "Update failed",
-            error: err.message
+            message: "Failed to fetch products",
+            error: err.message,
         });
     }
-}
+};
 
-// Delete product
-async function deleteproduct(req, res) {
-    const { id } = req.params;
+// ✅ Get Single Product by ID
+const getProductById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await ProductModel.findById(id);
 
-    const Deleteproduct = await ProductModel.findByIdAndDelete(id);
+        if (!product) {
+            return res.status(404).json({
+                status: 404,
+                message: "Product not found",
+            });
+        }
 
-    res.json({
-        status: 200,
-        message: "Deleted successfully",
-        data: Deleteproduct
-    });
-}
+        res.status(200).json({
+            status: 200,
+            message: "Product fetched successfully",
+            data: product,
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            message: "Failed to fetch product",
+            error: err.message,
+        });
+    }
+};
 
-module.exports = { addproduct, allproduct, singleproduct, updateproduct, deleteproduct };
+// ✅ Update Product
+const updateProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, price, description } = req.body;
+
+        let updateData = { title, price, description };
+
+        if (req.file && req.file.buffer) {
+            const imageUrl = await uploadFile(req.file.buffer);
+            updateData.image = imageUrl;
+        }
+
+        const updatedProduct = await ProductModel.findByIdAndUpdate(
+            id,
+            updateData,
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedProduct) {
+            return res.status(404).json({
+                status: 404,
+                message: "Product not found",
+            });
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: "Product updated successfully",
+            data: updatedProduct,
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            message: "Failed to update product",
+            error: err.message,
+        });
+    }
+};
+
+// ✅ Delete Product
+const deleteProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedProduct = await ProductModel.findByIdAndDelete(id);
+
+        if (!deletedProduct) {
+            return res.status(404).json({
+                status: 404,
+                message: "Product not found",
+            });
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: "Product deleted successfully",
+            data: deletedProduct,
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            message: "Failed to delete product",
+            error: err.message,
+        });
+    }
+};
+
+module.exports = {
+    addProduct,
+    getAllProducts,
+    getProductById,
+    updateProduct,
+    deleteProduct,
+};

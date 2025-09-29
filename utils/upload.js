@@ -23,7 +23,7 @@ export const uploadFile = async (fileBuffer) => {
 
         return new Promise((resolve, reject) => {
             const uploadOptions = {
-                folder: "Categories",
+                folder: "product",
             };
 
             cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {

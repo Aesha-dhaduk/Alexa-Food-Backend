@@ -1,18 +1,26 @@
-const express = require('express');
-const multer = require('multer');
-const { allproduct, singleproduct, addproduct, updateproduct, deleteproduct } = require('../controllers/product');
+// routes/product.js
+const express = require("express");
+const router = express.Router();
+const multer = require("multer");
 
-const route = express.Router();
+const {
+    addProduct,
+    getAllProducts,
+    getProductById,
+    updateProduct,
+    deleteProduct,
+} = require("../controllers/product");
+const auth = require("../middleware/user");
 
-// Multer setup (store file in memory for Cloudinary upload)
+// Multer setup for single image
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Routes
-route.post('/add', upload.single('image'), addproduct);      // Create product with image
-route.get('/', allproduct);                                 // Get all products
-route.get('/:id', singleproduct);                           // Get single product
-route.put('/:id', upload.single('image'), updateproduct);   // Update product (optional new image)
-route.delete('/:id', deleteproduct);                        // Delete product
+router.post("/",auth, upload.single("image"), addProduct);
+router.get("/", getAllProducts);
+router.get("/:id", getProductById);
+router.put("/:id",auth, upload.single("image"), updateProduct);
+router.delete("/:id", deleteProduct);
 
-module.exports = route;
+module.exports = router;

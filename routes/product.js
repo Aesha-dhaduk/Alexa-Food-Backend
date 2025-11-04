@@ -16,3 +16,4 @@ route.put('/:id', upload.single('image'), updateproduct);   // Update product (o
 route.delete('/:id', deleteproduct);                        // Delete product
 
 module.exports = route;
+

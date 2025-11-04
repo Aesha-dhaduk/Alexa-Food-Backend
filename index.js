@@ -14,16 +14,15 @@ app.use(cookieParser())
 app.use(cors());
 
 
-
-
 app.use('/user', UserRoutes)
 app.use('/product', ProductRoutes)
+
+
 mongoose.connect(process.env.DB_CONNECTION_STRING).then(() => {
     console.log("DB CONNECTED SUCCESSFULLY");
 }).catch((err) => {
     console.log(err);
 })
-
 
 
 

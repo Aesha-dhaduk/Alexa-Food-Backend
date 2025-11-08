@@ -99,7 +99,8 @@ async function login(req,res){
         status: 200,
         message:"login successfully !!",
         data:user,
-        token
+        token,
+        isAdmin: user.isAdmin || false
     })
 }
 
